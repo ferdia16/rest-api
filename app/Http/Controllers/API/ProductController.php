@@ -28,15 +28,37 @@ class ProductController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function show(){
+    public function show($id){
+        $product = Product::findOrFail($id);
 
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Detail Product',
+            'data'      => new ProductResource($product),
+        ], Response::HTTP_OK);
     }
 
-    public function update(){
+    public function update(ProductRequest $request, $id){
 
+        $product = Product::findOrFail($id);
+
+        $validated = $request->validated();
+        $product->update($validated);
+
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Product berhasil di update',
+            'data'      => new ProductResource($product),
+        ], Response::HTTP_OK);
     }
 
-    public function destroy(){
+    public function destroy($id){
+        $product = Product::findOrFail($id);
+        $product->delete();
 
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Product berhasil di hapus',
+        ], Response::HTTP_OK);
     }
 }
